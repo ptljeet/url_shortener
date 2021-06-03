@@ -17,7 +17,9 @@ admin.initializeApp({
 
 const static = express.static("public");
 
-const urlsdb = admin.firestore().collection("urlsdb")
+const urlsdb = admin.firestore().collection("urlsdb");
+const usersdb = admin.firestore().collection("usersdb");
+
 
 app.use(static);
 app.use(bodyParser.json());
@@ -50,7 +52,23 @@ app.get('/:short', (req, res) => {
 
 
 app.post('/admin/urls/', (req, res) => {
-  console.log(req.body);
+  const { email, password, short, url } = req.body;
+
+  usersdb.doc(email).get().then(response => {
+    const user = response.data(); 
+    // console.log(user);
+
+    if(user && (user.email == email) && (user.password == password )){
+      const doc = urlsdb.doc(short);
+      doc.set({url});
+      res.send("Done.");
+
+    }
+    else{
+      res.send(403, "Not Possible");
+    }
+
+  })
 
   res.send('Hello from another!')
 })
