@@ -40,7 +40,6 @@ app.get('/:short', (req, res) => {
     else{
       res.redirect(301, "https://github.com/rebeljeet")
     }
-
   })
 
   // res.send("we will redirect you to " + short);
